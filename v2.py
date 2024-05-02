@@ -496,21 +496,28 @@ async def ttt(ctx, *, args):
         await game_message.edit(content=f"{current_player.mention}, it's your turn.\n```\n{display_board(board)}\n```")
 
 
-@bot.command()
-async def shop(ctx):
-    embed = discord.Embed(title="Shop", description="List of items for purchase.", color=discord.Color.blue())
-    embed.add_field(name="`$buy temp_role`", value="This item gives you a cosmetic role. $100.00", inline=False)
-    embed.add_field(name="`$buy temp_role1`", value="This item gives you a cosmetic role, and access to a private channel! $500.00", inline=False)
-    await ctx.send(embed=embed)
+# Define your role IDs here
+role_ids = {
+    "role_1k": 1235445271920508998,  # Replace with actual role ID
+    "role_10k": 1235445595695747123,  # Replace with actual role ID
+    "role_100k": 1235445963280224308,  # Replace with actual role ID
+    "role_1m": 1235446849876525137,  # Replace with actual role ID
+    "role_1b": 1235448562460917780,  # Replace with actual role ID
+    "role_1t": 1235448860457828443,  # Replace with actual role ID
+    # Add more role IDs as needed
+}
 
 @bot.command()
 async def buy(ctx, item_name: str):
     buyer = ctx.author.name
     filename = '/home/egglessnoob/Desktop/money.csv'
     items = {
-        "temp_role": 100,  # Example item with price
-        "temp_role1": 500,  # Add more items with their prices
-        "item3": 15,
+        "role_1k": 1000,  # Example item with price
+        "role_10k": 10000,  # Add more items with their prices
+        "role_100k": 100000,
+        "role_1m": 1000000,
+        "role_1b": 1000000000,
+        "role_1t": 1000000000000,
         # Add more items as needed
     }
     money_balances = read_money_balances(filename)
@@ -544,15 +551,19 @@ async def buy(ctx, item_name: str):
         await ctx.send("Purchase canceled.")
         return
 
-    money_balances[buyer] -= item_price
-    if buyer in money_balances:
-        money_balances[buyer] -= item_price
+    # Grant role
+    role_id = role_ids[item_name]
+    role = ctx.guild.get_role(role_id)
+    if role:
+        await ctx.author.add_roles(role)
     else:
-        money_balances[buyer] = -item_price
+        await ctx.send("Role not found. Please contact server administrator.")
+
+    money_balances[buyer] -= item_price
 
     # Update the money balance and add the item to the inventory or perform relevant actions
     update_money_balance(filename, money_balances)
-    await ctx.send(f"You've purchased {item_name} for ${item_price:.2f}.")
+    await ctx.send(f"You've purchased {item_name} for ${item_price:.2f} and received the corresponding role.")
 
 
 bot.run('MTE3NTg5MDY0NDE5MTk1NzAxMw.GZtdjv.4039BrLsym-_rBJd1OV8W7GdSVysVomGA9xHC4')

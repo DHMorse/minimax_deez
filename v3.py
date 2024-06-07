@@ -13,10 +13,10 @@ import re
 
 bot = commands.Bot(command_prefix='$', intents=discord.Intents.all())
 
-CACHE_DIR = 'C:\\VS_Code\\discord_bot\\profile_pictures_cache'
+CACHE_DIR = '/home/egglessnoob/Desktop/profile_pictures_cache'
 # Global variable for the file path
-MONEY_JSON_FILEPATH = 'C:\\VS_Code\\discord_bot\\money.json'
-LICHESS_JSON_FILEPATH = 'C:\VS_Code\discord_bot\lichess_accounbts.json'
+MONEY_JSON_FILEPATH = '/home/egglessnoob/Desktop/money.json'
+LICHESS_JSON_FILEPATH = '/home/egglessnoob/Desktop/lichess_accounbts.json'
 LICHESS_API_URL = 'https://lichess.org/api/user/'
 
 # Override the default help command
@@ -51,9 +51,6 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-    if message.author.bot:
-        return
-
     print(f'User: {message.author.name}, Message: {message.content}, Channel: {message.channel.name}')
     
     # Reload money data from JSON
@@ -324,7 +321,7 @@ async def  sudo(ctx, *agreements):
             embed.add_field(name="`$sudo money @username`", value="This command allows you to check the balance of a user.", inline=False)
             await ctx.send(embed=embed)
 
-# Command to initiate a coin flip challenge
+
 @bot.command()
 async def cf(ctx, *, args):
     # Split the arguments
@@ -332,6 +329,7 @@ async def cf(ctx, *, args):
 
     # Check if there are enough arguments
     if len(args) < 2:
+        await ctx.send("Please provide both an opponent and an amount.")
         return
 
     # Check if the first argument is a valid member
@@ -339,11 +337,6 @@ async def cf(ctx, *, args):
         opponent = await commands.MemberConverter().convert(ctx, args[0])
     except commands.errors.MemberNotFound:
         await ctx.send("Please provide a valid member.")
-        return
-
-    # Check if the second argument is a valid amount
-    if args[1].lower() == 'nan':
-        await ctx.send("Please enter a valid amount.")
         return
 
     # Check if the second argument is a valid amount
@@ -424,6 +417,7 @@ async def cf(ctx, *, args):
 
         # Update balances in the JSON file
         update_money_balance(sender_money_balances)
+
 
 @bot.command()
 async def games(ctx):
@@ -933,7 +927,7 @@ async def leaderboard(ctx):
                 # Download profile picture
                 if user.avatar is None:
                     # Handle default profile picture
-                    profile_picture = Image.open("C:\\VS_Code\\default.png")  # Provide path to your default profile picture
+                    profile_picture = Image.open("/home/egglessnoob/Desktop/defualt.png")  # Provide path to your default profile picture
                 else:
                     profile_picture_response = requests.get(user.avatar.url, stream=True)
                     profile_picture_response.raise_for_status()
@@ -974,7 +968,7 @@ async def leaderboard(ctx):
     await ctx.send(embed=embed, file=discord.File("leaderboard_image.png"))
 
 #damn brit
-bot.run("MTIzMDk2MjI2OTc0ODQ2NTY2Ng.G99PQ1.04Ch0VvwZbQqS0ZnbPKMjjAra8t2dHv38M9BQ0")
+#bot.run("MTIzMDk2MjI2OTc0ODQ2NTY2Ng.G99PQ1.04Ch0VvwZbQqS0ZnbPKMjjAra8t2dHv38M9BQ0")
 
 #eli bot
-#bot.run('MTE3NTg5MDY0NDE5MTk1NzAxMw.GZtdjv.4039BrLsym-_rBJd1OV8W7GdSVysVomGA9xHC4')
+bot.run('MTE3NTg5MDY0NDE5MTk1NzAxMw.GZtdjv.4039BrLsym-_rBJd1OV8W7GdSVysVomGA9xHC4')
